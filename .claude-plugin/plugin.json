@@ -1,0 +1,31 @@
+{
+    // plugin.json is the manifest. Lives in .claude-plugin/ at plugin root. Only plugin.json goes inside .claude-plugin/ — skills, agents, hooks go at root level.
+    "name": "agentfactory-finance",
+    // Install: claude plugin install agentfactory-finance@marketplace
+    "description": "Agent Factory financial analysis Digital FTE",
+    "version": "2.1.0",
+    "skills": [
+        // Skills bundled. Each has SKILL.md with YAML frontmatter.
+        "skills/finance-analyst",
+        "skills/legal-reviewer",
+        "skills/islamic-finance",
+        "skills/banking-ai",
+        "skills/ca-cpa-practice"
+    ],
+    "agents": [
+        "agents/researcher.md",
+        "agents/auditor.md"
+    ],
+    "hooks": "hooks/hooks.json",
+    // Plugin hooks config. Same format as hooks in settings.json.
+    "mcp_servers": {
+        // MCP servers auto-configure on install.
+        "financial-data": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@agentfactory/mcp-financial-data"
+            ]
+        }
+    }
+}
