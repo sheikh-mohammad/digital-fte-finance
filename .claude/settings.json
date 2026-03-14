@@ -1,0 +1,68 @@
+{
+    // Project settings: permissions, hooks, env. Committed to git (team-shared). Personal overrides in settings.local.json (gitignored).
+    "permissions": {
+        // Allow/deny use glob patterns to control tool access.
+        "allow": [
+            "Read(specs/*)",
+            // Can read specs. SDD requires specs before execution. [Book: Ch.5]
+            "Write(reports/*)",
+            // Can write reports but NOT modify specs or settings.
+            "mcp:financial-data",
+            // MCP granted per-server. No blanket access. [Book: Ch.37]
+            "mcp:google-sheets",
+            "Bash(uv run pytest*)",
+            // Auto-approve test runs. Reduces approval fatigue.
+            "Bash(uv run pyright*)"
+        ],
+        "deny": [
+            "Write(.claude/*)",
+            // Cannot modify its own config. Prevents privilege escalation.
+            "Bash(rm -rf*)"
+        ]
+    },
+    "hooks": {
+        // Hooks are lifecycle triggers configured HERE in settings.json. Events: PreToolUse, PostToolUse, SessionStart, Stop, etc. [Book: Ch.3]
+        "PreToolUse": [
+            {
+                "matcher": "Bash",
+                // Matcher filters which tool fires this hook. 'Bash' = shell commands. 'Edit|Write' = file changes.
+                "hooks": [
+                    {
+                        "type": "command",
+                        // Four types: command (shell), http (POST), prompt (LLM judge), agent (subagent check).
+                        "command": "jq -r .tool_input.command | grep -q 'rm -rf' && exit 2 || exit 0",
+                        // Exit code 2 = BLOCK the action. Exit 0 = allow. This blocks destructive rm commands.
+                        "timeout": 5
+                    }
+                ]
+            }
+        ],
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write",
+                // After any file edit, auto-format. PostToolUse hooks guarantee consistency.
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "uv run ruff format \"$CLAUDE_FILE_PATHS\""
+                    }
+                ]
+            }
+        ],
+        "SessionStart": [
+            {
+                "hooks": [
+                    // SessionStart injects context automatically. Stdout becomes context.
+                    {
+                        "type": "command",
+                        "command": "git status --short && cat TODO.md"
+                    }
+                ]
+            }
+        ]
+    },
+    "env": {
+        // Environment variables for hooks and MCP servers.
+        "JURISDICTION": "PK"
+    }
+}
