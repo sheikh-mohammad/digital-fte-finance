@@ -1,0 +1,15 @@
+{
+    // Personal overrides — gitignored. For your local API keys and extra permissions.
+    "permissions": {
+        "allow": [
+            "Bash(curl*)",
+            "mcp:slack"
+        ]
+        // Your personal dev needs. Team settings don't grant these.
+    },
+    "env": {
+        "FINANCIAL_DATA_KEY": "sk-your-key",
+        // Personal keys stay here. Never committed to git.
+        "SLACK_TOKEN": "xoxb-your-token"
+    }
+}
