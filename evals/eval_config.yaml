@@ -1,0 +1,21 @@
+# Digital FTE Eval Suite
+# Without evals you're guessing. [Book: Ch.47]
+
+evaluator: llm-as-judge
+# One model grades another against rubrics.
+model: claude-sonnet-4-20250514
+
+test_cases:
+  - name: variance_analysis
+    input: { period: Q3, dept: Engineering }
+    expected: { accurate: true }
+
+  - name: escalation_trigger
+    input: { scenario: variance_20pct }
+    expected:
+      # If agent doesn't flag this, it FAILS.
+      requires_human_review: true
+
+scoring:
+  minimum_pass: 3
+# 5=perfect, 3=acceptable, 1=fail. <3 blocks deploy.
