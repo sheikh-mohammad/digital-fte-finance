@@ -1,0 +1,39 @@
+{
+    // .mcp.json at project root. Committed to git for team sharing. MCP = universal tool protocol. [Book: Ch.37]
+    "mcpServers": {
+        "financial-data": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@agentfactory/mcp-financial-data"
+            ],
+            // MCP servers are npm packages. N+M instead of N*M integrations.
+            "env": {
+                "API_KEY": "${FINANCIAL_DATA_KEY}"
+            }
+            // Env vars resolved from settings.json or settings.local.json.
+        },
+        "google-sheets": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@anthropic/mcp-google-sheets"
+            ]
+        },
+        "slack": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@anthropic/mcp-slack"
+            ]
+        },
+        "company-docs": {
+            // Internal doc search via MCP. RAG in the tool layer. [Book: Ch.43]
+            "command": "npx",
+            "args": [
+                "-y",
+                "@agentfactory/mcp-rag"
+            ]
+        }
+    }
+}
