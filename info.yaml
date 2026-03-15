@@ -1,0 +1,9 @@
+name: digital-fte-finance
+description: >
+  Learn by doing. Every file is a lesson.
+  Every folder is a concept.
+version: 2.1.0
+model: claude-opus-4-6
+project: explore-the-agent-factory
+type: Claude Code Project Lab
+lab: PROJECT LAB
